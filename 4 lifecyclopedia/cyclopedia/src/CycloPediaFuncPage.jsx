@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getRandomUser } from "./Utility/api";
 import Instructor from "./Instructor";
 
@@ -18,6 +18,51 @@ const CyclopediaFuncPage = () => {
   const [inputFeedback, setInputFeedback] = useState(() => {
     return "";
   });
+
+  useEffect(() => {
+    const getUser = async () => {
+      const response = await getRandomUser();
+      console.log(response);
+      setState((prevState) => {
+        return {
+          ...prevState,
+          instructor: {
+            name: response.data.first_name + " " + response.data.last_name,
+            email: response.data.email,
+            phone: response.data.phone_number,
+          },
+        };
+      });
+    };
+    if (!state.hideInstructor) {
+      getUser();
+    }
+  }, [state.hideInstructor]);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const response = await getRandomUser();
+      console.log(response);
+      setState((prevState) => {
+        return {
+          ...prevState,
+          studentList: [
+            ...prevState.studentList,
+            {
+              name: response.data.first_name + " " + response.data.last_name,
+            },
+          ],
+        };
+      });
+    };
+    if (state.studentList.length < state.studentCount) {
+      getUser();
+    } else if (state.studentCount < state.studentList.length) {
+      setState((prevState) => {
+        return { ...prevState, studentList: [] };
+      });
+    }
+  }, [state.studentCount]);
   // constructor(props) {
   //   super(props);
   //   this.state = {
@@ -35,17 +80,7 @@ const CyclopediaFuncPage = () => {
   //   if (JSON.parse(localStorage.getItem("CyclopediaState"))) {
   //     this.setState(JSON.parse(localStorage.getItem("CyclopediaState")));
   //   } else {
-  //     const response = await getRandomUser();
-  //     console.log(response);
-  //     this.setState({
-  //       instructor: {
-  //         name: response.data.first_name + " " + response.data.last_name,
-  //         email: response.data.email,
-  //         phone: response.data.phone_number,
-  //       },
-  //     });
-  //   }
-  // };
+
   // componentDidUpdate = async (previousProps, previousState) => {
   //   console.log("ComponentDidUpdate");
   //   localStorage.setItem("CyclopediaState", JSON.stringify(this.state));
@@ -91,7 +126,7 @@ const CyclopediaFuncPage = () => {
     });
   };
   const handleToggleInstructor = () => {
-    this.setState((prevState) => {
+    setState((prevState) => {
       return {
         ...prevState,
         hideInstructor: !prevState.hideInstructor,
@@ -122,7 +157,7 @@ const CyclopediaFuncPage = () => {
           placeholder="Name.."
           value={inputName}
           onChange={(e) => {
-            setInputName({ inputName: e.target.value });
+            setInputName(e.target.value);
           }}
         />
         <span>Value: {inputName}</span>
@@ -130,7 +165,7 @@ const CyclopediaFuncPage = () => {
         <textarea
           value={inputFeedback}
           onChange={(e) => {
-            setInputFeedback({ inputFeedback: e.target.value });
+            setInputFeedback(e.target.value);
           }}
           placeholder="Feedback.."
           name=""
@@ -141,7 +176,7 @@ const CyclopediaFuncPage = () => {
       <div className="p-3">
         <span className="h4 text-success">Students</span> <br />
         <div>Student Count: {state.studentCount}</div>
-        {this.state.studentList.map((student, index) => {
+        {state.studentList.map((student, index) => {
           return <div key={index}>-{student.name}</div>;
         })}
         <button className="btn btn-success btn-sm" onClick={handleAddStudent}>
