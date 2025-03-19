@@ -31,10 +31,29 @@ class CyclopediaClassPage extends React.Component {
       });
     }
   };
-  componentDidUpdate() {
+  componentDidUpdate = async (previousProps, previousState) => {
     console.log("ComponentDidUpdate");
     localStorage.setItem("CyclopediaState", JSON.stringify(this.state));
-  }
+    if (this.state.studentCount > previousState.studentCount) {
+      const response = await getRandomUser();
+      this.setState((prevState) => {
+        return {
+          studentList: [
+            ...prevState.studentList,
+            {
+              name: response.data.first_name + " " + response.data.last_name,
+            },
+          ],
+        };
+      });
+    } else if (previousState.studentCount > this.state.studentCount) {
+      this.setState((prevState) => {
+        return {
+          studentList: [],
+        };
+      });
+    }
+  };
   componentWillUnmount() {
     console.log("ComponentWillUnmount");
   }
@@ -105,6 +124,9 @@ class CyclopediaClassPage extends React.Component {
         <div className="p-3">
           <span className="h4 text-success">Students</span> <br />
           <div>Student Count: {this.state.studentCount}</div>
+          {this.state.studentList.map((student, index) => {
+            return <div key={index}>-{student.name}</div>;
+          })}
           <button
             className="btn btn-success btn-sm"
             onClick={this.handleAddStudent}
