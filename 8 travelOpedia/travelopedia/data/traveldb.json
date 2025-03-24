@@ -1,0 +1,28 @@
+{
+  "destinations": [
+    {
+      "id": "85.51578181876866",
+      "city": "asd",
+      "country": "d",
+      "daysNeeded": 1
+    },
+    {
+      "id": "11.697188843699259",
+      "city": "aa",
+      "country": "a",
+      "daysNeeded": 2
+    },
+    {
+      "id": "2.7593092872811864",
+      "city": "aaa",
+      "country": "as",
+      "daysNeeded": 10
+    },
+    {
+      "id": 33.64837315222533,
+      "city": "Montreal",
+      "country": "Canada",
+      "daysNeeded": 2
+    }
+  ]
+}
